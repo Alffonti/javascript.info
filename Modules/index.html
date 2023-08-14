@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ES Modules</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="./showNotification.js"></script>
+  </head>
+  <body>
+    <h1>ES Modules</h1>
+    <p>
+      <mark>Import</mark> and <mark>Export</mark> statements in JavaScript, only
+      function within ES modules. To convert a script into an ES module, simply
+      add the <mark>type="module"</mark> attribute to the script tag.
+    </p>
+    <div class="note">
+      <p>
+        However, it's important to note that ES modules are subject to CORS
+        (Cross-Origin Resource Sharing) restrictions. When using the file
+        protocol (<mark>file://</mark>) to access a module directly from the
+        local file system, browsers block the access. This is because, in such
+        cases, no server is involved, and CORS headers are not sent. The absence
+        of appropriate CORS headers leads to the browser rejecting the request,
+        thus preventing ES modules from being loaded and executed correctly.
+      </p>
+      <p>
+        To successfully use ES modules in the browser, it is recommended to
+        either run a local development server, such as Node.js
+        <mark>static-server</mark>, VSCode Live Server extension or use a web
+        server to serve your web pages and scripts using the HTTP protocol. By
+        doing so, the server will send the appropriate CORS headers, allowing
+        the browser to grant access to the module.
+      </p>
+    </div>
+
+    <div class="example">
+      <h2>To-Do List</h2>
+      <div class="inputContainer">
+        <input type="text" id="taskInput" placeholder="Add a new task" />
+        <button id="addButton">Add Task</button>
+      </div>
+      <ul id="taskList"></ul>
+
+      <script type="module" src="./main.js"></script>
+    </div>
+  </body>
+</html>

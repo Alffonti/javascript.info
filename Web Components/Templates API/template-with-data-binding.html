@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="#" type="image/x-icon" />
+    <title>Templates and Data Binding</title>
+    <script src="./scripts/produtcs.js"></script>
+    <script src="./scripts/data-binding-function.js"></script>
+  </head>
+  <body>
+    <template id="product-template">
+      <li><span data-bind="name"></span> - $<span data-bind="price"></span></li>
+    </template>
+
+    <ul id="product-list"></ul>
+
+    <script>
+      // Get the template element
+      const template = document.getElementById('product-template')
+
+      // Get the container element
+      const productList = document.getElementById('product-list')
+
+      // Iterate over the products array and generate HTML dynamically
+      products.forEach(product => {
+        // Clone the template content
+        const templateContent = template.content.cloneNode(true)
+
+        // Bind the data to the template content
+        bindDataToTemplate(templateContent, product)
+
+        // Append the updated template content to the container
+        productList.appendChild(templateContent)
+      })
+    </script>
+  </body>
+</html>

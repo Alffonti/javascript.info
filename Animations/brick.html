@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Brick animation</title>
+    <style>
+      .brick {
+        width: 40px;
+        height: 20px;
+        background: #ee6b47;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .path {
+        outline: 1px solid #e8c48e;
+        width: 100%;
+        height: 20px;
+        margin-bottom: 10px;
+      }
+
+      #animateBtn {
+        margin-bottom: 10px;
+      }
+    </style>
+    <script src="./scripts/animate.js"></script>
+    <script src="./scripts/timing-functions.js"></script>
+  </head>
+  <body>
+    <button id="animateBtn">Animate</button>
+    <script>
+      const timingFunctions = [
+        linear,
+        quad,
+        circ,
+        back.bind(null, 1.5),
+        elastic.bind(null, 1.5),
+        bounce,
+        bounceEaseOut,
+        bounceEaseInOut,
+      ]
+
+      let i = 0
+
+      timingFunctions.forEach(timingFunction => {
+        var brick = document.createElement('div')
+        brick.className = 'brick'
+        brick.id = 'brick' + ++i
+
+        var path = document.createElement('div')
+        path.className = 'path'
+
+        path.appendChild(brick)
+        document.body.appendChild(path)
+      })
+
+      animateBtn.onclick = function () {
+        timingFunctions.forEach((timingFunction, index) => {
+          animate({
+            duration: 5000,
+            timing: timingFunction,
+            draw: function (progress) {
+              const brick = document.getElementById('brick' + (index + 1))
+              brick.style.left =
+                progress * (document.body.clientWidth - brick.clientWidth) +
+                'px'
+            },
+          })
+        })
+      }
+    </script>
+  </body>
+</html>

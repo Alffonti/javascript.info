@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time Formatted Custom Element</title>
+    <style>
+      :not(:defined) {
+        width: 50%;
+        background: hsl(0, 0%, 80%);
+        display: block;
+        height: 30px;
+      }
+    </style>
+    <script src="./scripts/time-formatted.js"></script>
+  </head>
+  <body>
+    <time-formatted
+      datetime="2019-12-01"
+      year="numeric"
+      month="long"
+      day="numeric"
+      hour="numeric"
+      minute="numeric"
+      second="numeric"
+      time-zone-name="short"
+    ></time-formatted>
+  </body>
+</html>

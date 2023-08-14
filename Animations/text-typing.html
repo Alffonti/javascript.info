@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Typing Animation</title>
+    <style>
+      textarea {
+        display: block;
+        border: 1px solid #bbb;
+        color: #444;
+        font-size: 110%;
+      }
+
+      button {
+        margin-top: 10px;
+      }
+    </style>
+    <script src="./scripts/animate.js"></script>
+  </head>
+  <body>
+    <textarea id="textExample" rows="5" cols="60">
+He took his vorpal sword in hand:
+Long time the manxome foe he sought—
+So rested he by the Tumtum tree,
+And stood awhile in thought.
+  </textarea
+    >
+    <button onclick="animateText(textExample)">Run the animated typing!</button>
+
+    <script>
+      function animateText(textArea) {
+        let text = textArea.value
+        let to = text.length,
+          from = 0
+
+        animate({
+          duration: 1000,
+          timing: linear,
+          draw: function (progress) {
+            let result = (to - from) * progress + from
+            textArea.value = text.slice(0, Math.ceil(result))
+            console.log('from: ', from)
+            console.log('to: ', to)
+            console.log('progress: ', progress)
+            console.log('result: ', result)
+            console.log('textArea.value: ', textArea.value)
+          },
+        })
+      }
+
+      function linear(timeFraction) {
+        return timeFraction
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shadow DOM</title>
+  </head>
+  <body>
+    <style>
+      /* document style won't apply to the shadow tree inside #elem (1) */
+
+      * {
+        border: 0.1px solid grey;
+        padding: 1rem 3rem;
+        font-weight: bold;
+      }
+      p {
+        color: hsl(0, 70%, 50%);
+      }
+    </style>
+
+    <div id="elem"></div>
+    <p>
+      The Shadow DOM possesses its own stylesheets, preventing the application
+      of style rules from the outer DOM. Consequently, the paragraph within the
+      shadow tree does not display the red color. However, by utilizing the
+      universal selector or applying styles to its parent, inheritance can still
+      be employed to apply styles if the property permits it. As an
+      illustration, the grey border and padding do not affect the paragraph
+      within the shadow tree, but the font weight (bold) does.
+    </p>
+
+    <script>
+      elem.attachShadow({ mode: 'open' })
+      // shadow tree has its own style (2)
+      elem.shadowRoot.innerHTML = `
+    <style> p { background-color: pink;} </style>
+    <p>Hello, John!</p>
+  `
+
+      // <p> is only visible from queries inside the shadow tree (3)
+      console.log(document.querySelectorAll('p').length) // 0
+      console.log(elem.shadowRoot.querySelectorAll('p').length) // 1
+    </script>
+  </body>
+</html>

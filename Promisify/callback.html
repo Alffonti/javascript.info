@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Callback</title>
+    <script src="./scripts/loadScript.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      loadScript('./scripts/hello.js', (error, script) => {
+        if (error) {
+          console.log(`The script was not loaded because of ${error}`)
+        } else {
+          console.log(`The script ${script.src} is loaded`)
+          console.log(`variable from loaded script: ${variable}`)
+        }
+      })
+    </script>
+  </body>
+</html>

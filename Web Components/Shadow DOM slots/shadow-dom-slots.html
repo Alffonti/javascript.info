@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>slotchange example</title>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <custom-menu id="menu">
+      <span slot="title">Candy menu</span>
+      <li slot="item">Lollipop</li>
+      <li slot="item">Fruit Toast</li>
+      <li slot="item">Cup Cake</li>
+    </custom-menu>
+
+    <template id="tmpl">
+      <style>
+        ul {
+          margin: 0;
+          list-style: none;
+          padding-left: 20px;
+        }
+
+        ::slotted([slot='title']) {
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        ::slotted([slot='title'])::before {
+          content: '📂';
+          font-size: 14px;
+          padding-right: 5px;
+        }
+
+        .closed ::slotted([slot='title'])::before {
+          content: '📁';
+        }
+
+        .closed ul {
+          display: none;
+        }
+      </style>
+
+      <div class="menu">
+        <slot name="title"></slot>
+        <ul>
+          <slot name="item"></slot>
+        </ul>
+      </div>
+    </template>
+
+    <script>
+      setTimeout(() => {
+        menu.insertAdjacentHTML(
+          'beforeEnd',
+          '<li slot="item">Dulce de Leche </li>'
+        )
+      }, 1000)
+
+      setTimeout(() => {
+        console.log(
+          'Slot used by the first list element in menu:',
+          menu.querySelector('li').assignedSlot
+        )
+      }, 2000)
+
+      setTimeout(() => {
+        console.log(
+          'Elements within the slot with item attribute:',
+          menu.shadowRoot.querySelector('slot[name="item"]').assignedElements()
+        )
+      }, 2000)
+    </script>
+  </body>
+</html>

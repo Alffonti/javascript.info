@@ -1,0 +1,174 @@
+/* Custom properties */
+:root {
+  --success-text: hsl(140, 60%, 40%);
+  --warning-text: hsl(48, 100%, 50%); /* Yellow */
+  --danger-text: hsl(360, 60%, 55%); /* Red */
+  --info-text: hsl(210, 100%, 50%); /* Blue */
+  --success-bg: hsl(140, 80%, 70%);
+  --warning-bg: hsl(48, 100%, 50%); /* Yellow */
+  --danger-bg: hsl(360, 100%, 90%); /* Red */
+  --info-bg: hsl(210, 100%, 50%); /* Blue */
+  --light-grey-bg: hsl(0, 0%, 98%); /* Off White */
+  --grey-bg: hsl(0, 0%, 90%); /* Gray */
+  --dark-grey-bg: hsl(0, 0%, 80%); /* Dark Grey */
+  --black: hsl(0, 0%, 20%); /* Black */
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  text-align: center;
+}
+
+p {
+  text-align: left;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  max-width: 60rem;
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.8;
+  padding: 3rem 1rem;
+  margin-inline: auto;
+}
+
+body,
+#__next,
+#root {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p {
+  max-width: 55rem;
+  margin-inline: auto;
+}
+
+ul,
+ol {
+  padding-left: 20px;
+}
+
+li {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+button {
+  margin: 1rem auto;
+  display: block;
+}
+
+/* https://css-tricks.com/styling-code-in-and-out-of-blocks/ */
+/* Code */
+p > code,
+li > code,
+dd > code,
+td > code {
+  background: var(--grey-bg);
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: 0.1rem 0.3rem 0.2rem;
+  border-radius: 0.2rem;
+}
+
+pre code {
+  display: block;
+  background: none;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
+  max-width: 100%;
+  min-width: 100px;
+  padding: 0;
+}
+
+/* Notes, examples, info containers */
+
+.note,
+.example {
+  padding: 2rem;
+  margin: 3rem auto;
+  position: relative;
+}
+
+.note:before,
+.example:before {
+  position: absolute;
+  padding: 0.25rem 1rem;
+  font-weight: bold;
+  top: -1.65rem;
+  left: -1.65rem;
+}
+
+.note {
+  background-color: var(--danger-bg);
+}
+
+.note:before {
+  --danger-bg: hsl(360, 100%, 80%); /* Red */
+  content: 'note';
+  background-color: var(--danger-bg);
+}
+
+.example {
+  border: 2px solid var(--success-bg);
+}
+
+.example:before {
+  content: 'example';
+  background-color: var(--success-bg);
+}
+.example h3 {
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regex</title>
+    <script src="./scripts/helper-functions.js"></script>
+    <script defer src="./scripts/regex.js"></script>
+  </head>
+
+  <body>
+    <!-- hola -->
+    <!---->
+    <script>
+      // Example 1
+      console.log(
+        'Contact us at 123-456-7890 or 9876543210. For support, call 555-1234.'.match(
+          /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/g
+        )
+      ) // phone numbers (7 digits)
+      separator()
+
+      // Example 2
+      alert(
+        `... <!-- My -- comment
+                              test --> <h1>Heading</h1>  <!----> ..
+                                    `.match(/<!--.*?-->/gs)
+      ) // HTML comments
+      separator()
+
+      // Example 3
+      alert(
+        '<> <a href="/"> <input type="radio" checked> <b>'.match(/<[^>]+>/g)
+      ) // / The regex /<[^>]+>/g does not work as expected because it matches the entire substring '<> <a href="/">'. In a lazy mode /.+?/, the engine finds the first match (">"), then continues searching for the rest of the pattern, which happens to be another ">". As a result, the entire substring '<> <a href="/">' is considered as a single match.
+      separator()
+
+      // Example 4
+      alert(
+        'en.wikipedia.org wordpress.org/documentation coca-cola.com alffonti@gmail.com '.match(
+          /([\w-]+\.)+\w+/g
+        )
+      ) // domain names
+      separator()
+
+      // Example 5
+      alert(
+        `Don't forget to join the Zoom meeting tomorrow @9am
+                          Please reach out to supportt@company.co.uk for assistance.
+                          Contact me at john.doe@egmail.com for any inquiries.
+                        `.match(/[\w.-]+@[a-zA-Z_-]+(?:\.[a-zA-Z]+)+/g)
+      )
+      separator()
+
+      // Example 6
+      const regex = /Transaction ID: ([0-9]+)/g
+      const text = `
+            Transaction ID: 12345, Date: 2023-07-22, Total Amount: $100.25
+            Transaction ID: 67890, Date: 2023-07-23, Total Amount: $50.75
+            Transaction ID: 45678, Date: 2023-07-24, Total Amount: $75.00
+            `
+
+      const matchesIterator = text.matchAll(regex)
+
+      for (const match of matchesIterator) {
+        const transactionID = match[1] // The first capture group holds the transaction ID
+        console.log(`Processing transaction with ID: ${transactionID}`)
+
+        // Perform some analysis or processing on the transaction with the given ID
+
+        // We want to stop the search when we find the transaction with ID '67890'
+        if (transactionID === '67890') {
+          console.log('Transaction found. Stopping the search...')
+          break // No more regex searches needed
+        }
+      }
+      separator()
+
+      // Example 7 - Bug
+      let regExpression = /-?\d+(\.\d+)?/g
+      let string = '-1.5 0 2 -123.4. .-4 ' // .-4, -.6, a9, 3f shouldn't be matched
+
+      let matches = string.match(regExpression)
+
+      alert(matches) // Output: -1.5, 0, 2, -123.4
+      separator()
+
+      //Example 9
+      let regexp = /<style(\s+.*?)?>/g
+
+      alert('<style> <styler> <style test="..."> <styling>'.match(regexp)) // <style>, <style test="...">
+      separator()
+
+      // Example 10
+
+      let stri = '<h1>Hello, world!</h1>'
+      let regexpr = /<(.*?)>/g
+
+      let matchAll = stri.matchAll(regexpr)
+
+      matchAll = Array.from(matchAll)
+      alert(matchAll) // [object RegExp String Iterator], not array, but an iterable
+    </script>
+  </body>
+</html>

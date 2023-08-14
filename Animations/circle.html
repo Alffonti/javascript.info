@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animations</title>
+    <style>
+      .circle {
+        transition-property: width, height;
+        transition-duration: 2s;
+        position: fixed;
+        transform: translateX(-50%) translateY(-50%);
+        background-color: red;
+        border-radius: 50%;
+      }
+
+      .message-ball {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="go()">Click me</button>
+
+    <script>
+      let clicked = false
+      let ended = false
+
+      function showCircle(cx, cy, radius, callback) {
+        if (!clicked) {
+          clicked = true
+
+          let div = document.createElement('div')
+          div.className = 'circle'
+          div.style.width = '0px'
+          div.style.height = '0px'
+          div.style.top = cy + 'px'
+          div.style.left = cx + 'px'
+          document.body.append(div)
+
+          setTimeout(() => {
+            div.style.width = 2 * radius + 'px'
+            div.style.height = 2 * radius + 'px'
+          }, 0)
+
+          div.addEventListener('transitionend', event => {
+            if (!ended) {
+              ended = true
+              callback(div)
+              div.style.fontSize = radius / 4 + 'px'
+              div.style.lineHeight = 2 * radius + 'px'
+            }
+          })
+        }
+      }
+
+      function go() {
+        showCircle(200, 200, 150, div => {
+          div.classList.add('message-ball')
+          div.append('Hello, world!')
+        })
+      }
+    </script>
+  </body>
+</html>

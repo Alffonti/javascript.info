@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event loop</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Event loop</h1>
+    <p>
+      JavaScript operates as a <mark>single-threaded</mark> language (only one
+      line of code is executed at a time). To prevent unresponsiveness in web
+      pages, JavaScript employs an <mark>event loop</mark> mechanism. This
+      mechanism enables the execution of lengthy operations to occur
+      independently from the <mark>main execution thread</mark>.
+    </p>
+    <div class="note">
+      <p>
+        The browser run an iteration of the event loop in the following order:
+      </p>
+      <ol>
+        <li>Choose a task to execute from the task queue</li>
+        <li>Execute the chosen task</li>
+        <li>Perform microtask checkpoint (execute all available microtasks)</li>
+        <li>Update the rendering if needed.</li>
+        <li>Repeat the process</li>
+      </ol>
+    </div>
+    <p>
+      Within the event loop, the main execution thread begins by executing the
+      main script (which is considered the first task). Whenever a function or
+      code block is invoked, a new <mark>execution context</mark> is created and
+      placed onto a call stack within the main thread. This
+      <mark>call stack</mark>
+      effectively maintains a record of previously called functions. The code
+      within a function is executed within this newly created context. As soon
+      as the code exits that context, the corresponding execution context is
+      deleted.
+    </p>
+    <p>
+      Once the main thread is empty (all functions within the call stack have
+      been executed), all <mark>microtasks</mark> are executed. Microtasks
+      include promise resolutions, <code>queueMicrotask()</code> and
+      <code>process.nextTick()</code>. When these functions are invoked (unlike
+      regular functions that are added to the call stack), its callback
+      functions are added to the <mark>microtask queue</mark>. This separate
+      microtask queue ensures that microtasks are executed independently from
+      the main thread, thus preventing any obstruction.
+    </p>
+    <p>
+      Once all microtasks have been executed,
+      <b
+        >the browser render the page (or rerender the updated nodes) if there
+        are DOM updates</b
+      >.
+    </p>
+    <p>
+      A new cycle of the event loop is initiated by adding the oldest pending
+      task in the task queue to the main thread.
+      <mark>Tasks</mark> (macrotasks) inlcude timeouts, intervals, and DOM
+      events. When these functions are invoked or a DOM event is triggered
+      (unlike regular functions that are added to the call stack), its callback
+      functions are added to the task queue.
+    </p>
+    <div class="note">
+      The browser's event loop processes macrotasks in the order they were added
+      to the queue, but it only executes a macrotask's associated callback if
+      the specified time has elapsed (for tasks scheduled using
+      <code>setTimeout</code> or <code>setInterval</code>).
+    </div>
+    <div class="note">
+      The minimum time required for rendering is 16.67 milliseconds. This
+      implies that multiple tasks can be executed if each task takes less than
+      this duration.
+    </div>
+    <p>
+      Macrotasks and microtasks are essential for
+      <mark>asynchronous operations</mark> in JavaScript. While they are both
+      executed outside of the main thread, they have different priorities and
+      execution order. Microtasks, being higher-priority, allow developers to
+      perform tasks like managing state updates, ensuring smoother user
+      experiences even during long-running tasks. Macrotasks, on the other hand,
+      deal with events and timers that are less time-critical.
+    </p>
+    <div class="example">
+      <h2>
+        Microtasks execution
+        <button id="loadScriptButton2">Play example</button>
+      </h2>
+      <p id="text">Initial (please wait 2s)</p>
+
+      <script>
+        document
+          .getElementById('loadScriptButton2')
+          .addEventListener('click', function () {
+            requestAnimationFrame(() => {
+              document.getElementById('text').textContent =
+                'modified (The function "lockUI" engages in recursive promise chaining over a span of 5 seconds. All these promises will get executed before the next rendering, and block the rendering process (page is unresponsive).'
+              const start = performance.now()
+              ;(function lockUI() {
+                // IIFE
+                if (performance.now() - start < 2000) {
+                  return Promise.resolve().then(lockUI)
+                }
+              })()
+            })
+          })
+      </script>
+    </div>
+
+    <div class="example">
+      <h2>Execution of microtasks within multiple scripts</h2>
+      <p id="text2">
+        Microtasks are promptly executed immediately after the script finishes
+        its execution (typically when the closing script tag is encountered). In
+        scenarios involving multiple script tags, the browser processes and
+        executes each script independently. This leads to the completion of the
+        entire execution of the first script, including its microtasks, before
+        transitioning to the subsequent script. (In this example, the console
+        logs 2,1,3).
+      </p>
+      <script>
+        new Promise(r => r()).then(() => {
+          console.log(1)
+        })
+        console.log(2)
+      </script>
+      <script>
+        console.log(3)
+      </script>
+    </div>
+
+    <div class="note">
+      <p>
+        The requestAnimationFrame() callbacks are executed right after the main
+        script and all microtasks have run, but just before the browser performs
+        the next rendering update. This ensures that your animations or other
+        visual changes are applied at the right time, just before the rendering
+        repaint occurs.
+      </p>
+    </div>
+    <div class="example">
+      <h2>
+        requestAnimationFrame()
+        <button id="loadScriptButton">Play example</button>
+      </h2>
+      <p id="text3">Loading...</p>
+      <div id="example3"></div>
+
+      <script>
+        let time = 0
+        document
+          .getElementById('loadScriptButton')
+          .addEventListener('click', function () {
+            setTimeout(() => alert('timeout 1'))
+            setTimeout(() => alert('timeout 2'))
+
+            Promise.resolve()
+              .then(() => alert('promise 1'))
+              .then(() => alert(' thenable promise 1'))
+              .catch(console.error)
+
+            const raf = () => {
+              alert('requestAnimationFrame')
+              time++
+              if (time < 5) {
+                const p = document.createElement('p')
+                p.textContent = `node ${time} added with requestAnimationFrame 1`
+                document.getElementById('example3').appendChild(p)
+                requestAnimationFrame(raf)
+              }
+            }
+
+            const raf2 = () => {
+              alert('requestAnimationFrame 2')
+              if (time < 3) {
+                const p = document.createElement('p')
+                p.textContent = `text ${time} added with requestAnimationFrame 2`
+                document.getElementById('example3').appendChild(p)
+
+                requestAnimationFrame(raf2)
+              }
+            }
+
+            requestAnimationFrame(raf)
+
+            requestAnimationFrame(raf2)
+
+            Promise.resolve()
+              .then(() => alert('promise 2'))
+              .then(() => alert(' thenable promise 2'))
+              .catch(console.error)
+
+            alert('main script')
+
+            const p = document.getElementById('text3')
+            p.textContent =
+              'Page rendered for the first time since button was clicked '
+          })
+      </script>
+    </div>
+  </body>
+</html>
